@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="initial-scale=1" />
+  <title>LA Houses</title>
+
+  <style>
+    html,
+    body,
+    #viewDiv {
+      padding: 0;
+      margin: 0;
+      height: 100%;
+      width: 100%;
+    }
+
+  </style>
+
+  <link rel="stylesheet" href="https://js.arcgis.com/4.11/esri/themes/light/main.css" />
+  <script src="https://js.arcgis.com/4.11/"></script>
+
+  <script>
+    require([
+      "esri/Map",
+      "esri/layers/CSVLayer",
+      "esri/views/MapView",
+      "esri/PopupTemplate"
+    ], function (Map, CSVLayer, MapView, PopupTemplate) {
+      // If CSV files are not on the same domain as your website, a CORS enabled server
+      // or a proxy is required.
+      const url = "/lahouses.csv";
+
+      var template = {
+        title: "LA Houses",
+        content: [{
+            type: "fields",
+            fieldInfos: [{
+                fieldName: "name",
+                label: "Name",
+                visible: true
+              },
+              {
+                fieldName: "url",
+                label: "URL",
+                visible: true
+              },
+              {
+                fieldName: "price",
+                label: "Price",
+                visible: true
+              },
+              {
+                fieldName: "where",
+                label: "Location",
+                visible: true
+              }
+            ]
+          }
+          // {
+          //   type: "text",
+          //   text: "{name} <br> {price} <br> <a href='{url}'>View details</a>"
+          // }
+        ]
+        // content: "{name} <br> {price} <br> <a href='{url}'>View details</a>"
+      };
+
+      var csvLayer = new CSVLayer({
+        url: url,
+        copyright: "LA Houses",
+        popupTemplate: template
+      });
+
+      var map = new Map({
+        basemap: "gray"
+      });
+
+      var view = new MapView({
+        container: "viewDiv",
+        center: [242, 34],
+        zoom: 8,
+        map: map,
+        popup: {
+          dockEnabled: true,
+          dockOptions: {
+            buttonEnabled: false,
+            breakpoint: false
+          }
+        }
+      });
+
+      map.add(csvLayer);
+
+    });
+
+  </script>
+</head>
+
+<body>
+  <div id="viewDiv"></div>
+</body>
+
+</html>
